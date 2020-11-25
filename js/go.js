@@ -10951,7 +10951,7 @@
         null === a && (a = x.document.body);
         var b = ta("div");
         b.dir = "rtl";
-        b.style.cssText = "font-size: 14px; width: 1px; height: 1px; position: absolute; top: -1000px; overflow: scroll;";
+        b.style.cssText = "font-size: 14px; width: 1px; height: 1px; position: absoalute; top: -1000px; overflow: scroll;";
         b.textContent = "A";
         a.appendChild(b);
         var c = "reverse";

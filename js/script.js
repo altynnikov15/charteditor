@@ -129,7 +129,7 @@ function init() {
 
     // This converter is used by the Picture.
     function findHeadShot(key) {
-        if (key < 0 || key > 16) return "images/HSnopic.jpg"; // There are only 16 images on the server
+        if (key < 0 || key > 300) return "images/HSnopic.jpg"; // There are only 16 images on the server
         return "images/HS" + key + ".jpg"
     }
 
@@ -177,7 +177,7 @@ function init() {
             // define the node's outer shape
             $(go.Shape, "Rectangle",
                 {
-                    name: "SHAPE", fill: "#333333", stroke: 'white', strokeWidth: 3.5,
+                    name: "SHAPE", fill: "#333333", stroke: 'black', strokeWidth: 3.5,
                     // set the port properties:
                     portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"
                 }),
@@ -192,7 +192,7 @@ function init() {
                 // define the panel where the text will appear
                 $(go.Panel, "Table",
                     {
-                        minSize: new go.Size(130, NaN),
+                        minSize: new go.Size(150, NaN),
                         maxSize: new go.Size(150, NaN),
                         margin: new go.Margin(6, 10, 0, 6),
                         defaultAlignment: go.Spot.Left
