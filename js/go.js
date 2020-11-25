@@ -5963,7 +5963,7 @@
                 e = g.deltaX;
                 g = g.deltaY;
                 if (Ta || Ua || Va) h = 1, 0 < e && (e = 3), 0 > e && (e = -3), 0 < g && (g = 3), 0 > g && (g = -3);
-                if (void 0 === h || void 0 === e || void 0 === g || 0 === e && 0 === g || b.shift) !b.shift && a.allowVerticalScroll ? (f = 3 * f * a.scrollVerticalLineChange, 0 < c ? a.scroll("pixel", "up", f) : a.scroll("pixel", "down", f)) : b.shift && a.allowHorizontalScroll && (f = 3 * f * a.scrollHorizontalLineChange, 0 < c ? a.scroll("pixel", "left", f) : a.scroll("pixel", "right", f)); else {
+                if (void 0 === h || void 0 === e || void 0 === g || 0 === e && 0 === g || b.shift) !b.shift && a.allowVerticalScroll ? (f = 3 * f * a.scrollVerticalLineChange, 0 < c ? a.scroll("pixel", "up", f) : a.scroll("pixel", "down", f)) : b.shift && a.allowHorizontalScroll && (f = 3 * f * a.scrollHorizontalLineChange, 0 < c ? a.scroll("pixel", "left", f) : a.scroll("pixel", "", f)); else {
                     switch (h) {
                         case 0:
                             c = "pixel";

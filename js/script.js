@@ -25,12 +25,12 @@ function init() {
                     $(go.TreeLayout,
                         {
                             treeStyle: go.TreeLayout.StyleLastParents,
-                            arrangement: go.TreeLayout.ArrangementHorizontal,
+                            arrangement: go.TreeLayout.ArrangementVertical,
                             // properties for most of the tree:
-                            angle: 90,
+                            angle: 180,
                             layerSpacing: 35,
                             // properties for the "last parents":
-                            alternateAngle: 90,
+                            alternateAngle: 180,
                             alternateLayerSpacing: 35,
                             alternateAlignment: go.TreeLayout.AlignmentBus,
                             alternateNodeSpacing: 20
@@ -192,8 +192,8 @@ function init() {
                 // define the panel where the text will appear
                 $(go.Panel, "Table",
                     {
-                        minSize: new go.Size(150, NaN),
-                        maxSize: new go.Size(150, NaN),
+                        minSize: new go.Size(160, NaN),
+                        maxSize: new go.Size(180, NaN),
                         margin: new go.Margin(6, 10, 0, 6),
                         defaultAlignment: go.Spot.Left
                     },
@@ -205,7 +205,14 @@ function init() {
                             editable: true, isMultiline: false,
                             minSize: new go.Size(10, 16)
                         },
+
                         new go.Binding("text", "name").makeTwoWay()),
+
+
+                    $(go.TextBlock, "Group: ", textStyle(),
+                        {row: 3, column: 0}),
+                    $(go.TextBlock, "level: ", textStyle(),
+                        {row: 4, column: 0}),
 
                     $(go.TextBlock, "Position: ", textStyle(),
                         {row: 1, column: 0}),
@@ -217,7 +224,8 @@ function init() {
                             minSize: new go.Size(10, 14),
                             margin: new go.Margin(0, 0, 0, 3)
                         },
-                        new go.Binding("text", "title").makeTwoWay()),
+
+                        new go.Binding("text", "position").makeTwoWay()),
                     $(go.TextBlock, textStyle(),
                         {row: 2, column: 0},
                         new go.Binding("text", "id", function (v) {
