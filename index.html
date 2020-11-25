@@ -1,114 +1,471 @@
-﻿<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
+    <title>Org Chart Editor</title>
+
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-
-    <script src="js/go.js"></script>
-    <script src="js/gosamples.js"></script>
-    <script src="js/highlight.js"></script>
-
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jQuery v3.4.1.js"></script>
-
-    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
-    <link type="text/css" rel="stylesheet" href="css/highlight.min.css">
-    <link type="text/css" rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/datainspector.css">
-    <script src="js/datainspector.js"></script>
-
+    <link type="text/css" rel="stylesheet" href="css/DataInspector.css"/>
 </head>
-<body>
-
-<div id="sample" class="col-md-10">
-    <div id="myDiagramDiv"
-         style="background-color: rgb(52, 52, 60); border: 1px solid black; height: 570px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;">
-        <canvas tabindex="0" width="904" height="551"
-                style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; width: 904px; height: 551px; cursor: auto;">
-            This text is displayed if your browser does not support the Canvas HTML element.
-        </canvas>
-        <div style="position: absolute; overflow: auto; width: 100%; height: 568px; z-index: 1;">
-            <div style="position: absolute; width: 1687.5px; height: 1px;"></div>
-        </div>
-    </div>
+<body onload="init()">
+<div id="sample">
+    <div id="myDiagramDiv" style="background-color: #34343C; border: solid 1px black; height: 100vh;"></div>
     <p>
         <button id="zoomToFit">Zoom to Fit</button>
         <button id="centerRoot">Center on root</button>
     </p>
 
     <div>
-        <div id="myInspector" class="inspector"></div>
+        <div id="myInspector">
+        </div>
     </div>
-    <p>
-        This editable organizational chart sample color-codes the Nodes according to the tree level in the hierarchy.
-    </p>
-    <p>
-        Double click on a node in order to add a person or the diagram background to add a new boss. Double clicking the
-        diagram uses the <a href="../api/symbols/ClickCreatingTool.html" target="api">ClickCreatingTool</a>
-        with a custom <a href="../api/symbols/ClickCreatingTool.html#insertPart" target="api">ClickCreatingTool.insertPart</a>
-        to scroll to the new node and start editing the <a href="../api/symbols/TextBlock.html"
-                                                           target="api">TextBlock</a> for its name .
-    </p>
-    <p>
-        Drag a node onto another in order to change relationships.
-        You can also draw a link from a node's background to other nodes that have no "boss". Links can also be relinked
-        to change relationships.
-        Right-click or tap-hold a Node to bring up a context menu which allows you to:
-    </p>
-    <ul>
-        <li>Vacate Position - remove the information specfic to the current person in that role</li>
-        <li>Remove Role - removes the role entirely and reparents any children</li>
-        <li>Remove Department - removes the role and the whole subtree</li>
-    </ul>
-    Deleting a Node or Link will orphan the child Nodes and generate a new tree. A custom SelectionDeleting <a
-        href="../api/symbols/DiagramEvent.html" target="api">DiagramEvent</a> listener will clear out the boss info
-    when the parent is removed.
-    <p></p>
-    <p>
-        Select a node to edit/update node data values. This sample uses the <a href="../extensions/DataInspector.html">Data
-        Inspector</a> extension to display and modify Part data.
-    </p>
-    <p>
-        To learn how to build an org chart from scratch with GoJS, see the <a href="../learn/index.html">Getting Started
-        tutorial</a>.
-    </p>
-    <p>
-        If you want to have some "assistant" nodes on the side, above the regular reports,
-        see the <a href="orgChartAssistants.html">Org Chart Assistants</a> sample, which is a copy of this sample
-        that uses a custom <a href="../api/symbols/TreeLayout.html" target="api">TreeLayout</a> to position "assistants"
-        that way.
-    </p>
+
+
     <div>
         <div>
-            <button id="SaveButton" onclick="save()" disabled="">Save</button>
+            <button id="SaveButton" class="ntSaveFormsSubmit" onclick="save()">Save</button>
             <button onclick="load()">Load</button>
             Diagram Model saved in JSON format:
         </div>
-        <textarea id="mySavedModel" style="width:100%; height:270px;">{ "class": "go.TreeModel",
+
+        <textarea id="mySavedModel" class="ntSaveForms" style="width:100%; height:270px;" class="ntSaveForms" placeholder="Адрес доставки">{ "class": "go.TreeModel",
   "nodeDataArray": [
-{"key":1, "name":"Stell Payne Diaz", "title":"CEO"},
-{"key":2, "name":"Luke Warm", "title":"VP Marketing/Sales", "parent":1},
-{"key":3, "name":"Meg Meehan Hoffa", "title":"Sales", "parent":2},
-{"key":4, "name":"Peggy Flaming", "title":"VP Engineering", "parent":1},
-{"key":5, "name":"Saul Wellingood", "title":"Manufacturing", "parent":4},
-{"key":6, "name":"Al Ligori", "title":"Marketing", "parent":2},
-{"key":7, "name":"Dot Stubadd", "title":"Sales Rep", "parent":3},
-{"key":8, "name":"Les Ismore", "title":"Project Mgr", "parent":5},
-{"key":9, "name":"April Lynn Parris", "title":"Events Mgr", "parent":6},
-{"key":10, "name":"Xavier Breath", "title":"Engineering", "parent":4},
-{"key":11, "name":"Anita Hammer", "title":"Process", "parent":5},
-{"key":12, "name":"Billy Aiken", "title":"Software", "parent":10},
-{"key":13, "name":"Stan Wellback", "title":"Testing", "parent":10},
-{"key":14, "name":"Marge Innovera", "title":"Hardware", "parent":10},
-{"key":15, "name":"Evan Elpus", "title":"Quality", "parent":5},
-{"key":16, "name":"Lotta B. Essen", "title":"Sales Rep", "parent":3}
- ]
+    {
+      "id": 212,
+      "login": "a.h@lineup.com.ua",
+      "name": "Анастасия Гураль",
+      "mail": "a.h@lineup.com.ua",
+      "created_on": "2020-09-17T10:34:21Z"
+    },
+    {
+      "id": 208,
+      "login": "aa@lineup.com.ua",
+      "name": "Артём Ахметзянов",
+      "mail": "aa@lineup.com.ua",
+      "created_on": "2020-09-07T05:53:23Z",
+      "last_login_on": "2020-10-17T10:08:43Z"
+    },
+    {
+      "id": 224,
+      "login": "ai@lineup.com.ua",
+      "name": "Артем Измалков",
+      "mail": "ai@lineup.com.ua",
+      "created_on": "2020-11-20T14:59:59Z",
+      "last_login_on": "2020-11-24T06:38:38Z"
+    },
+    {
+      "id": 113,
+      "login": "alex.b",
+      "name": "Алексей Безпаленко",
+      "mail": "alex.b@lineup.com.ua",
+      "created_on": "2018-12-06T15:10:28Z",
+      "last_login_on": "2020-11-07T15:11:46Z"
+    },
+    {
+      "id": 52,
+      "login": "alex.ch",
+      "name": "Александр Чиняков",
+      "mail": "ac@lineup.com.ua",
+      "created_on": "2016-12-01T08:47:48Z",
+      "last_login_on": "2020-10-27T11:22:04Z"
+    },
+    {
+      "id": 140,
+      "login": "Alexander.Perel@gmail.com",
+      "name": "Alexander Perel",
+      "mail": "Alexander.Perel@gmail.com",
+      "created_on": "2019-10-30T20:10:02Z",
+      "last_login_on": "2020-09-29T08:27:42Z"
+    },
+    {
+      "id": 118,
+      "login": "Alexandr_Prysiazhnyi",
+
+      "name": "Александр Присяжный",
+      "mail": "po@lineup.com.ua",
+      "created_on": "2019-03-12T09:26:47Z",
+      "last_login_on": "2019-03-13T08:24:30Z"
+    },
+    {
+      "id": 183,
+      "login": "alexey@lineup.com.ua",
+
+      "name": "Алексей Битюков",
+      "mail": "alexey@lineup.com.ua",
+      "created_on": "2020-03-25T13:06:14Z",
+      "last_login_on": "2020-07-18T15:18:59Z"
+    },
+    {
+      "id": 134,
+      "login": "Alexey_Gladkovskiy",
+
+      "name": "Алексей Гладковский ",
+      "mail": "alex.g@lineup.com.ua",
+      "created_on": "2019-09-26T07:57:25Z",
+      "last_login_on": "2020-11-06T16:43:35Z"
+    },
+    {
+      "id": 11,
+      "login": "Alina",
+
+      "name": "Алина Петровская",
+      "mail": "pm@lineup.com.ua",
+      "created_on": "2015-10-09T09:28:49Z",
+      "last_login_on": "2020-11-05T15:06:57Z"
+    },
+    {
+      "id": 124,
+      "login": "AllaMets",
+
+      "name": "Алла Мец",
+      "mail": "qa@lineup.com.ua",
+      "created_on": "2019-06-05T13:01:13Z",
+      "last_login_on": "2020-11-23T11:56:20Z"
+    },
+    {
+      "id": 195,
+      "login": "anasttikha",
+
+      "name": "Анастасия Тихая",
+      "mail": "anasttikha@lineup.com.ua",
+      "created_on": "2020-06-30T08:19:48Z",
+      "last_login_on": "2020-11-24T07:55:17Z"
+    },
+    {
+      "id": 223,
+      "login": "andrew.k@lineup.com.ua",
+
+      "name": "Андрей Карнаух",
+      "mail": "andrew.k@lineup.com.ua",
+      "created_on": "2020-11-18T14:12:05Z",
+      "last_login_on": "2020-11-24T09:41:11Z"
+    },
+    {
+      "id": 216,
+      "login": "anna.s@lineup.com.ua",
+
+      "name": "Анна Савчук",
+      "mail": "anna.s@lineup.com.ua",
+      "created_on": "2020-10-26T07:54:57Z",
+      "last_login_on": "2020-11-23T20:37:32Z"
+    },
+    {
+      "id": 218,
+      "login": "anton.l@lineup.com.ua",
+
+      "name": "Антон Лысенко",
+      "mail": "anton.l@lineup.com.ua",
+      "created_on": "2020-10-28T11:40:35Z",
+      "last_login_on": "2020-11-02T11:49:10Z"
+    },
+    {
+      "id": 221,
+      "login": "artem@lineup.com.ua",
+
+      "name": "Артем Сагайдаков",
+      "mail": "artem@lineup.com.ua",
+      "created_on": "2020-11-09T08:04:37Z",
+      "last_login_on": "2020-11-09T13:04:33Z"
+    },
+    {
+      "id": 127,
+      "login": "Artem_Voloshynski",
+      "lastname": "Артем Волошинский",
+      "mail": "av@lineup.com.ua",
+      "created_on": "2019-07-26T08:33:53Z",
+      "last_login_on": "2020-11-23T07:23:44Z"
+    },
+    {
+      "id": 147,
+      "login": "artur@lineup.com.ua",
+
+      "name": "Артур Гончаров",
+      "mail": "artur@lineup.com.ua",
+      "created_on": "2019-11-12T17:31:21Z",
+      "last_login_on": "2020-11-13T15:21:48Z"
+    },
+    {
+      "id": 122,
+      "login": "az@lineup.com.ua",
+
+      "name": "Александра Золотько",
+      "mail": "az@lineup.com.ua",
+      "created_on": "2019-05-06T08:22:07Z",
+      "last_login_on": "2019-05-06T08:26:56Z"
+    },
+    {
+      "id": 209,
+      "login": "azh@lineup.com.ua",
+
+      "name": "Андрей Жихарев",
+      "mail": "azh@lineup.com.ua",
+      "created_on": "2020-09-07T09:00:08Z",
+      "last_login_on": "2020-11-24T07:30:50Z"
+    },
+    {
+      "id": 174,
+      "login": "b3.proskyrin.ilya@gmail.com",
+      "name": "Илья Проскурин",
+      "mail": "b3.proskyrin.ilya@gmail.com",
+      "created_on": "2019-11-29T13:28:04Z",
+      "last_login_on": "2020-11-10T09:18:33Z"
+    },
+    {
+      "id": 219,
+      "login": "boris.r@lineup.com.ua",
+
+      "name": "Борис Розумный",
+      "mail": "boris.r@lineup.com.ua",
+      "created_on": "2020-11-02T14:51:41Z",
+      "last_login_on": "2020-11-23T11:33:33Z"
+    },
+    {
+      "id": 184,
+      "login": "dp@lineup.com.ua",
+
+      "name": "Дмитрий Плеханов",
+      "mail": "dp@lineup.com.ua",
+      "created_on": "2020-03-30T06:50:18Z",
+      "last_login_on": "2020-04-07T11:20:15Z"
+    },
+    {
+      "id": 92,
+      "login": "Evgeniy_Rubezhin",
+      "name": "Евгений Рубежин",
+      "mail": "er@lineup.com.ua",
+      "created_on": "2018-05-14T07:19:54Z",
+      "last_login_on": "2020-11-09T10:21:45Z"
+    },
+    {
+      "id": 100,
+      "login": "Georgy",
+      "name": "Георгий Гейнц",
+      "mail": "george@lineup.com.ua",
+      "created_on": "2018-08-23T06:02:24Z",
+      "last_login_on": "2020-11-14T11:23:20Z"
+    },
+    {
+      "id": 182,
+      "login": "gz@lineup.com.ua",
+
+      "name": "Глеб Захарчук",
+      "mail": "gz@lineup.com.ua",
+      "created_on": "2020-02-24T10:53:14Z",
+      "last_login_on": "2020-10-13T14:38:18Z"
+    },
+    {
+      "id": 141,
+      "login": "hr@lineup.com.ua",
+      "name": "Алина Водяницкая",
+      "mail": "hr@lineup.com.ua",
+      "created_on": "2019-11-04T14:43:00Z",
+      "last_login_on": "2020-09-28T07:54:10Z"
+    },
+    {
+      "id": 32,
+      "login": "igor.babych",
+      "name": "Игорь Бабич",
+      "mail": "igor.babych@lineup.com.ua",
+      "created_on": "2016-05-13T09:45:05Z",
+      "last_login_on": "2020-11-03T07:47:25Z"
+    },
+    {
+      "id": 120,
+      "login": "it@lineup.com.ua",
+      "name": "Илья Цыпин",
+      "mail": "it@lineup.com.ua",
+      "created_on": "2019-04-22T08:23:32Z",
+      "last_login_on": "2020-11-11T15:23:55Z"
+    },
+    {
+      "id": 211,
+      "login": "ivan.k@lineup.com.ua",
+      "name": "Иван Кисиленко",
+      "mail": "ivan.k@lineup.com.ua",
+      "created_on": "2020-09-14T07:34:02Z",
+      "last_login_on": "2020-11-23T09:03:48Z"
+    },
+    {
+      "id": 214,
+      "login": "ivan.t@lineup.com.ua",
+      "name": "Иван Татауш",
+      "mail": "ivan.t@lineup.com.ua",
+      "created_on": "2020-10-08T06:55:03Z",
+      "last_login_on": "2020-11-24T11:56:57Z"
+    },
+    {
+      "id": 107,
+      "login": "koz.srg",
+      "name": "Сергей Козарь",
+      "mail": "sky@lineup.com.ua",
+      "created_on": "2018-09-28T13:11:06Z",
+      "last_login_on": "2020-10-16T09:15:17Z"
+    },
+    {
+      "id": 203,
+      "login": "kristina@lineup.com.ua",
+      "name": "Кристина Степанова",
+      "mail": "kristina@lineup.com.ua",
+      "created_on": "2020-08-03T07:30:25Z",
+      "last_login_on": "2020-11-20T10:47:34Z"
+    },
+    {
+      "id": 125,
+      "login": "ks@lineup.com.ua",
+
+      "name": "Катерина Колосова",
+      "mail": "ks@lineup.com.ua",
+      "created_on": "2019-07-03T08:09:52Z",
+      "last_login_on": "2020-10-27T10:47:34Z"
+    },
+    {
+      "id": 138,
+      "login": "kvm@lineup.com.ua",
+      "name": "Вячеслав Кукин",
+      "mail": "kvm@lineup.com.ua",
+      "created_on": "2019-10-21T07:13:13Z",
+      "last_login_on": "2020-11-02T11:49:06Z"
+    },
+    {
+      "id": 190,
+      "login": "la@lineup.com.ua",
+
+      "name": "Андрей Лысенко",
+      "mail": "la@lineup.com.ua",
+      "created_on": "2020-05-26T13:40:17Z",
+      "last_login_on": "2020-11-09T11:18:16Z"
+    },
+    {
+      "id": 131,
+      "login": "law@lineup.com.ua",
+      "name": "Александр Бильчук",
+      "mail": "law@lineup.com.ua",
+      "created_on": "2019-09-16T19:27:40Z",
+      "last_login_on": "2020-11-21T12:14:39Z"
+    },
+    {
+      "id": 143,
+      "login": "liza@lineup.com.ua",
+      "name": "Лиза Томилова",
+      "mail": "liza@lineup.com.ua",
+      "created_on": "2019-11-05T10:35:58Z",
+      "last_login_on": "2020-06-03T09:52:09Z"
+    },
+    {
+      "id": 179,
+      "login": "maria@lineup.com.ua",
+      "name": "Мария Яременко",
+      "mail": "maria@lineup.com.ua",
+      "created_on": "2020-01-20T10:06:19Z",
+      "last_login_on": "2020-02-18T08:34:42Z"
+    },
+    {
+      "id": 75,
+      "login": "Marianna",
+      "name": "Марианна Близнюк",
+      "mail": "marianna@lineup.com.ua",
+      "created_on": "2017-10-23T14:02:22Z",
+      "last_login_on": "2020-11-13T13:18:53Z"
+    },
+    {
+      "id": 193,
+      "login": "max.voitenko@lineup.com.ua",
+      "firstname": "Максим",
+      "lastname": "Войтенко",
+      "mail": "max.voitenko@lineup.com.ua",
+      "created_on": "2020-06-25T13:28:34Z",
+      "last_login_on": "2020-11-17T10:01:18Z"
+    },
+    {
+      "id": 111,
+      "login": "Maxim_Vasiliev",
+
+      "name": "Максим Васильев",
+      "mail": "max@lineup.com.ua",
+      "created_on": "2018-10-22T13:07:08Z",
+      "last_login_on": "2020-11-23T14:07:51Z"
+    },
+    {
+      "id": 215,
+      "login": "misha.k@lineup.com.ua",
+      "lastname": "Михаил Кушка",
+      "mail": "misha.k@lineup.com.ua",
+      "created_on": "2020-10-21T06:34:16Z",
+      "last_login_on": "2020-10-21T07:23:35Z"
+    },
+    {
+      "id": 225,
+      "login": "mp@lineup.com.ua",
+      "name": "Павел Мягкий",
+      "mail": "mp@lineup.com.ua",
+      "created_on": "2020-11-20T15:07:36Z",
+      "last_login_on": "2020-11-23T11:11:34Z"
+    },
+    {
+      "id": 192,
+      "login": "officem@lineup.com.ua",
+      "name": "Катерина Немашкало",
+      "mail": "officem@lineup.com.ua",
+      "created_on": "2020-06-02T09:36:14Z",
+      "last_login_on": "2020-11-20T14:59:01Z"
+    },
+    {
+      "id": 202,
+      "login": "oleg.m@lineup.com.ua",
+      "name": "Олег Молодецкий",
+      "mail": "oleg.m@lineup.com.ua",
+      "created_on": "2020-07-31T06:51:23Z",
+      "last_login_on": "2020-07-31T07:06:03Z"
+    },
+    {
+      "id": 210,
+      "login": "oleg.v@lineup.com.ua",
+      "name": "Олег Вантковский",
+      "mail": "oleg.v@lineup.com.ua",
+      "created_on": "2020-09-10T11:12:33Z",
+      "last_login_on": "2020-11-09T15:39:56Z"
+    },
+    {
+      "id": 128,
+      "login": "pay",
+
+      "name": "pay pay",
+      "mail": "robot@lineup.com.ua",
+      "created_on": "2019-08-15T07:38:40Z",
+      "last_login_on": "2020-07-17T10:27:34Z"
+    },
+    {
+      "id": 126,
+      "login": "pk@lineup.com.ua",
+      "name": "Павел Кривенко",
+      "mail": "pk@lineup.com.ua",
+      "created_on": "2019-07-22T06:45:49Z",
+      "last_login_on": "2020-11-24T12:28:33Z"
+    },
+    {
+      "id": 175,
+      "login": "popov.maksym1@gmail.com",
+      "name": "Максим Попов",
+      "mail": "popov.maksym1@gmail.com",
+      "created_on": "2019-11-29T13:29:05Z",
+      "last_login_on": "2020-01-22T13:41:55Z"
+    }
+  ],
+  "total_count": 66,
+  "offset": 0,
+  "limit": 50
 }
+
     </textarea>
+
+
     </div>
+
 </div>
+<script src="js/go.js"></script>
+<script src="js/datainspector.js"></script>
+<script id="code" src="js/script.js"></script>
 </body>
 </html>
